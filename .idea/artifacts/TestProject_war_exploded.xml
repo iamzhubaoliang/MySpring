@@ -1,0 +1,29 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="TestProject:war exploded">
+    <output-path>$PROJECT_DIR$/TestProject/target/TestProject-1.0-SNAPSHOT</output-path>
+    <properties id="maven-jee-properties">
+      <options>
+        <exploded>true</exploded>
+        <module>TestProject</module>
+        <packaging>war</packaging>
+        <unpackNestedArchives>false</unpackNestedArchives>
+      </options>
+    </properties>
+    <root id="root">
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="TestProject" />
+        </element>
+        <element id="directory" name="lib">
+          <element id="archive" name="Spring_framework-1.0-SNAPSHOT.jar">
+            <element id="module-output" name="Spring_framework" />
+          </element>
+        </element>
+      </element>
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/TestProject/target/TestProject-1.0-SNAPSHOT/META-INF/MANIFEST.MF" />
+      </element>
+      <element id="javaee-facet-resources" facet="TestProject/web/Web" />
+    </root>
+  </artifact>
+</component>
