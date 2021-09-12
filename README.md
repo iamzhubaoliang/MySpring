@@ -6,6 +6,7 @@
 
 1. IOC ：实现了控制反转，可以通过注解进行注入
 2. AOP：实现了代理功能，但是功能不完善，后期改进
+3. SpringMVC ：实现了web层业务的解耦，可以将数据，业务处理逻辑，视图做基本的解耦
 
 项目的思路：
 
@@ -17,11 +18,14 @@
 
 由于项目初期(项目开始于2021/9/8)并没有做太多的优化因此会有Bug，可以讨论 :)
 
-
+SpringMVC部分借鉴了博主  [椰子Tyshawn](https://tyshawnlee.blog.csdn.net/)   https://blog.csdn.net/litianxiang_kaola/article/details/86646947
 
 项目中有一个测试工程
 
 功能修复日志
 
 1. 2021/9/12 添加了前后置处理器
+2. 2021/9/12 添加了SpringMVC基本功能
+
+后期会写一篇总结
 
