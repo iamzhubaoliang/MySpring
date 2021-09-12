@@ -19,8 +19,8 @@ public class HandlerMapping {
     {
         for(Object controllerName: Container.controllerMap.keySet())
         {
-            Class<?> controllerClass=Container.controllerMap.get(controllerName).getClass();
-            for(Method method:controllerClass.getDeclaredMethods())
+            Object controllerInstance=Container.controllerMap.get(controllerName);
+            for(Method method:controllerInstance.getClass().getDeclaredMethods())
             {
                 if(!method.isAnnotationPresent(RequestMapping.class))
                     return;
@@ -30,7 +30,7 @@ public class HandlerMapping {
                 //将适用的方法封装成请求体
                 Request request=new Request("/"+path,requestMethod);
 
-                Handler handler=new Handler(controllerClass,method);
+                Handler handler=new Handler(controllerInstance,method);
 
                 HandlerMap.put(request,handler);
             }

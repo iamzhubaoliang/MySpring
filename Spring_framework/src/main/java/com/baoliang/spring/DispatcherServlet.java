@@ -2,8 +2,12 @@ package com.baoliang.spring;
 
 import com.baoliang.spring.Data.Handler;
 import com.baoliang.spring.Data.Request;
+import com.baoliang.spring.Data.RequestParam;
+import com.baoliang.spring.Data.View;
+import com.baoliang.spring.Helper.Adapter;
 import com.baoliang.spring.Helper.Container;
 import com.baoliang.spring.Helper.HandlerMapping;
+import com.baoliang.spring.Helper.ViewResolver;
 import com.baoliang.spring.config.initMethod;
 
 import javax.servlet.ServletConfig;
@@ -32,8 +36,26 @@ public class DispatcherServlet extends HttpServlet {
         String requestMehod = req.getMethod();
         String requestPath  = req.getPathInfo();//获取到的路径类似 /aa=xxx
         Request request=new Request(requestPath,requestMehod);
+
+        //交给处理器映射器处理
         Handler handler= HandlerMapping.getHandler(request);
-        System.out.println("ss");
+        if(handler==null)
+            return;
+
+        //请求处理器适配器适配器适配Parm
+        RequestParam parm=new RequestParam();
+        parm.creatParam(req);
+        Object result=Adapter.AdapterForRequest(parm,handler);
+
+        if(result instanceof View)
+        {
+            ViewResolver.handleViewResult((View) result,req,resp);
+        }else if(result instanceof String)
+        {
+            ViewResolver.handleDataResult((String) result,resp);
+        }
+
+
 
     }
 }

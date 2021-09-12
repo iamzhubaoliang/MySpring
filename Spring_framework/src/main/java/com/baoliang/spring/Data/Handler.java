@@ -7,20 +7,20 @@ import java.lang.reflect.Method;
  * 用户名: liangliang
  **/
 public class Handler {
-    private Class<?> ControllerClass;
+    private Object Controller;
     private Method ControllerMethod;
 
-    public Handler(Class<?> controllerClass, Method controllerMethod) {
-        ControllerClass = controllerClass;
+    public Handler(Object controller, Method controllerMethod) {
+        Controller = controller;
         ControllerMethod = controllerMethod;
     }
 
-    public Class<?> getControllerClass() {
-        return ControllerClass;
+    public Object getController() {
+        return Controller;
     }
 
-    public void setControllerClass(Class<?> controllerClass) {
-        ControllerClass = controllerClass;
+    public void setController(Object controller) {
+        Controller = controller;
     }
 
     public Method getControllerMethod() {
@@ -30,7 +30,4 @@ public class Handler {
     public void setControllerMethod(Method controllerMethod) {
         ControllerMethod = controllerMethod;
     }
-
-
-
 }

@@ -14,6 +14,9 @@
         <element id="directory" name="classes">
           <element id="module-output" name="Spring_framework" />
         </element>
+        <element id="directory" name="lib">
+          <element id="library" level="project" name="Maven: com.alibaba:fastjson:1.2.49" />
+        </element>
       </element>
       <element id="directory" name="META-INF">
         <element id="file-copy" path="$PROJECT_DIR$/Spring_framework/target/Spring_framework-1.0-SNAPSHOT/META-INF/MANIFEST.MF" />
