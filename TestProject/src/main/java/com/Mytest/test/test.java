@@ -12,16 +12,18 @@ import com.baoliang.spring.MySpringApplication;
  **/
 public class test {
     public static void main(String[] args) {
-        MySpringApplication app = new MySpringApplication(config.class);
-        ClassAspectTestInterface classInterface = app.getBean(ClassInterfaceImpl.class);
-        classInterface.FunctionRun();
-        ((ClassInterfaceImpl) classInterface).Propertyfuntion();
-        System.out.println("Bean的名称为"+((ClassInterfaceImpl) classInterface).BeanName);
-        MethodAspectTestInterface methodinterface = app.getBean(MethodAspectImpl.class);
-        methodinterface.methdFunction();
+//        MySpringApplication app = new MySpringApplication(config.class);
+//        ClassAspectTestInterface classInterface = app.getBean(ClassInterfaceImpl.class);
+//        classInterface.FunctionRun();
+//        ((ClassInterfaceImpl) classInterface).Propertyfuntion();
+//        System.out.println("Bean的名称为"+((ClassInterfaceImpl) classInterface).BeanName);
+//        MethodAspectTestInterface methodinterface = app.getBean(MethodAspectImpl.class);
+//        methodinterface.methdFunction();
+//
+//        MethodAspectTestInterface aa= (MethodAspectTestInterface) app.getBean("Namefor");
+//        aa.methdFunction();
+        MySpringApplication app = new MySpringApplication();
 
-        MethodAspectTestInterface aa= (MethodAspectTestInterface) app.getBean("Namefor");
-        aa.methdFunction();
     }
 
 

@@ -1,5 +1,6 @@
 package com.baoliang.spring.Helper;
 
+import java.awt.image.renderable.ContextualRenderedImageFactory;
 import java.io.File;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -31,14 +32,20 @@ public class LoadBeanHelper {
      */
     public static void LoadAllBean() {
         for (Class<?> clazz : classesHashSet) {
-            if (!clazz.isAnnotationPresent(Component.class))
+            if (!(clazz.isAnnotationPresent(Component.class)||clazz.isAnnotationPresent(Controller.class)))
                 continue;
             BeanDefintion newBeanDefine = new BeanDefintion();
             newBeanDefine.setClazz(clazz);
             String BeanName=clazz.getName();
             BeanName=getBeanName(BeanName);
-            if(!clazz.getAnnotation(Component.class).value().equals(""))
+            if(clazz.isAnnotationPresent(Component.class)&&!clazz.getAnnotation(Component.class).value().equals(""))
                 BeanName=clazz.getAnnotation(Component.class).value();
+            if(clazz.isAnnotationPresent(Controller.class)&&!clazz.getAnnotation(Controller.class).value().equals("")) {
+                BeanName = clazz.getAnnotation(Controller.class).value();
+
+            }
+            if(clazz.isAnnotationPresent(Controller.class))
+                newBeanDefine.setIsController(true);
             newBeanDefine.setBeanName(BeanName);
             //加载后置处理器
             if (BeanPostProcessor.class.isAssignableFrom(clazz)) {
@@ -114,6 +121,7 @@ public class LoadBeanHelper {
                 beanDefintionHashMap.put(newBeanDefine.getBeanName(), newBeanDefine);
 //            beanDefintionHashMap.put(getBeanName(clazz.getName()), newBeanDefine);
         }
+        System.out.println("aa");
 
     }
 
@@ -229,6 +237,11 @@ public class LoadBeanHelper {
                 Container.singletonObjects.put(beanDefintion.getBeanName(),Container.earlySingletonObjects.get(beanDefintion.getBeanName()));
                 //后置处理器
                 Container.earlySingletonObjects.remove(beanDefintion.getBeanName());
+                //加入Controllermap引用
+                if(beanDefintion.isController())
+                    Container.controllerMap.put(beanDefintion.getBeanName(),Container.singletonObjects.get(beanDefintion.getBeanName()));
+
+
                 if(instance instanceof BeanNameAware)
                 {
                     ((BeanNameAware)instance).SetBeanName(beanDefintion.getBeanName());
@@ -334,6 +347,7 @@ public class LoadBeanHelper {
      */
     public static Set<Class<?>> LoadAllClass(String packagePath)
     {
+
 
         URL resource=classLoader.getResource(packagePath.replace(".","/"));
         ArrayList<File> files=new ArrayList<>();

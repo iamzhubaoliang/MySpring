@@ -1,9 +1,12 @@
 package com.baoliang.spring;
 
 
+import com.baoliang.spring.Helper.HandlerMapping;
 import com.baoliang.spring.Helper.LoadBeanHelper;
 import com.baoliang.spring.Helper.Container;
 import com.baoliang.spring.Annotation.CompoentScan;
+
+import java.util.ResourceBundle;
 
 public class MySpringApplication {
 
@@ -12,11 +15,27 @@ public class MySpringApplication {
         Container.classLoader=classLoader;
     }
     public MySpringApplication(Class config) {
-        CompoentScan componentScanAnnotation=(CompoentScan) config.getAnnotation(CompoentScan.class);
-        String path=componentScanAnnotation.value();
-        LoadBeanHelper.LoadAllClass(path);
-        LoadBeanHelper.LoadAllBean();
-        LoadBeanHelper.ProductBean();
+        if(Container.singletonObjects.size()==0) {
+
+            CompoentScan componentScanAnnotation = (CompoentScan) config.getAnnotation(CompoentScan.class);
+            String path = componentScanAnnotation.value();
+            LoadBeanHelper.LoadAllClass(path);
+            LoadBeanHelper.LoadAllBean();
+            LoadBeanHelper.ProductBean();
+            HandlerMapping.getAllHandler();
+        }
+    }
+
+    public MySpringApplication() {
+        if(Container.singletonObjects.size()==0)
+        {
+            ResourceBundle bundle = ResourceBundle.getBundle("config");
+            LoadBeanHelper.LoadAllClass(bundle.getString("componentScan"));
+            LoadBeanHelper.LoadAllBean();
+            LoadBeanHelper.ProductBean();
+            HandlerMapping.getAllHandler();
+        }
+
     }
     public <T>  T getBean(Class<T> s)
     {

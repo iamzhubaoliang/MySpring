@@ -12,6 +12,15 @@ public class BeanDefintion {
     private Class clazz;
 
     private String BeanName;
+    private  boolean isController=false;
+
+    public boolean isController() {
+        return isController;
+    }
+
+    public void setIsController(boolean controller) {
+        this.isController = controller;
+    }
 
     public String getBeanName() {
         return BeanName;
@@ -20,6 +29,7 @@ public class BeanDefintion {
     public void setBeanName(String beanName) {
         BeanName = beanName;
     }
+
 
 
 
