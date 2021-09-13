@@ -16,7 +16,7 @@
 
 **欢迎Pull request**
 
-由于项目初期(项目开始于2021/9/8)并没有做太多的优化因此会有Bug，可以讨论 :)
+由于项目初期并没有做太多的优化因此会有Bug，可以讨论 :)
 
 SpringMVC部分借鉴了博主  [椰子Tyshawn](https://tyshawnlee.blog.csdn.net/)   https://blog.csdn.net/litianxiang_kaola/article/details/86646947
 
