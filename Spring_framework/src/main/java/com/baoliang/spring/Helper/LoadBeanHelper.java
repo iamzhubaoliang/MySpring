@@ -114,14 +114,14 @@ public class LoadBeanHelper {
                         }
 
                     }
-//                    AddToAspect(method, annotationPath, methodNode);
+
 
                 }
             }
                 beanDefintionHashMap.put(newBeanDefine.getBeanName(), newBeanDefine);
-//            beanDefintionHashMap.put(getBeanName(clazz.getName()), newBeanDefine);
+
         }
-        System.out.println("aa");
+
 
     }
 
