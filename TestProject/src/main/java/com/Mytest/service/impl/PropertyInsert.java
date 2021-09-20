@@ -8,7 +8,8 @@ import com.baoliang.spring.Annotation.Component;
  **/
 
 @Component
-public class PropertyInsert {
+public class PropertyInsert implements propertyInterface{
+
     public void funtion()
     {
         System.out.println("注入的属性执行方法");

@@ -14,6 +14,7 @@ import java.util.Set;
 import com.baoliang.spring.Annotation.*;
 import com.baoliang.spring.Annotation.*;
 import com.baoliang.spring.Enum.ScopeEnum;
+import com.baoliang.spring.Helper.System.Utils;
 import com.baoliang.spring.Interface.BeanNameAware;
 import com.baoliang.spring.Interface.BeanPostProcessor;
 import com.baoliang.spring.Interface.InitializingBean;
@@ -27,6 +28,13 @@ public class LoadBeanHelper {
     private static HashMap<String, ArrayList<MethodNode>> BeforeDelegatedSet = new HashMap<>();
     private static HashMap<String, ArrayList<MethodNode>> AfterDelegatedSet = new HashMap<>();
     private static ArrayList<BeanPostProcessor> BeanPostProcessorList=new ArrayList<>();
+    private static String splitOP= "\\";
+    static {
+        if(Utils.getSystem().equals("Linux"))
+            splitOP="/";
+
+    }
+
     /**
      * 将所有的BeanDefintion放入map中，挑选出Bean
      */
@@ -70,7 +78,7 @@ public class LoadBeanHelper {
                 newBeanDefine.setScope(scope);
             } else {
                 //默认为单例模式
-                newBeanDefine.setScope(ScopeEnum.SingleTon.toString());
+                newBeanDefine.setScope("SingleTon");
             }
             //添加切面
             if (clazz.isAnnotationPresent(Aspect.class)) {
@@ -100,14 +108,14 @@ public class LoadBeanHelper {
                                 DFSgetCureentDir(file,fileArray);
                                 for(File f:fileArray)
                                 {
-                                   String key= f.getAbsolutePath().replace("\\",".");
+                                   String key= f.getAbsolutePath().replace(splitOP,".");
                                    key=key.substring(key.indexOf(annotationPath),key.indexOf(f.getName())+f.getName().length()-6);
                                    AddToAspects(clazz,key,false,"");
                                 }
 
                             }else
                             {
-                                String key= file.getAbsolutePath().replace("\\",".");
+                                String key= file.getAbsolutePath().replace(splitOP,".");
                                 key=key.substring(key.indexOf(annotationPath),key.indexOf(file.getName())+file.getName().length()-6);
                                 AddToAspects(clazz,key,false,"");
                             }
@@ -185,9 +193,10 @@ public class LoadBeanHelper {
                 BeanDefintion beanDefintion = beanDefintionHashMap.get(beanName);
 //                beanDefintion.setBeanName(beanName);
 //                如果是单例变成生产工厂
-                if (beanDefintion.getScope().equals(ScopeEnum.SingleTon.toString())) {
+                if (beanDefintion.getScope().equals("SingleTon")) {
 
                     CreateBean(beanDefintion,true);
+
                 }
             }
 //        System.out.println("s");
@@ -199,9 +208,8 @@ public class LoadBeanHelper {
             //如果在一级直接返回
             if(Container.singletonObjects.containsKey(beanDefintion.getBeanName())&&sinleton)
                 return Container.singletonObjects.get(beanDefintion);
-            else if(Container.earlySingletonObjects.containsKey(beanDefintion.getBeanName()))
+            else if(Container.singletonFactory.containsKey(beanDefintion.getBeanName()))
             {
-                //只能在第二级填充
                 return Container.earlySingletonObjects.get(beanDefintion.getBeanName());
 
             }else {
@@ -229,14 +237,19 @@ public class LoadBeanHelper {
 
                 //扔到三级缓存
                 Container.singletonFactory.put(beanDefintion.getBeanName(), dynamicBeanFactory);
-                populate(beanDefintion.getBeanName());
-                //扔到二级
-                Container.earlySingletonObjects.put(beanDefintion.getBeanName(),Container.singletonFactory.get(beanDefintion.getBeanName()).getTarget());
-                Container.singletonFactory.remove(beanDefintion.getBeanName());
+                Object targetBean=populate(beanDefintion.getBeanName());
+
+                if(Container.earlySingletonObjects.containsKey(beanDefintion.getBeanName()))
+                    Container.earlySingletonObjects.remove(beanDefintion.getBeanName());
+                if(Container.singletonFactory.containsKey(beanDefintion.getBeanName()))
+                    Container.singletonFactory.remove(beanDefintion.getBeanName());
+
                 //扔到一级
-                Container.singletonObjects.put(beanDefintion.getBeanName(),Container.earlySingletonObjects.get(beanDefintion.getBeanName()));
+                Container.singletonObjects.put(beanDefintion.getBeanName(),targetBean);
+
+
                 //后置处理器
-                Container.earlySingletonObjects.remove(beanDefintion.getBeanName());
+
                 //加入Controllermap引用
                 if(beanDefintion.isController())
                     Container.controllerMap.put(beanDefintion.getBeanName(),Container.singletonObjects.get(beanDefintion.getBeanName()));
@@ -262,7 +275,7 @@ public class LoadBeanHelper {
 
                 }
 
-
+//                System.out.println("s");
             }
 
 
@@ -288,16 +301,22 @@ public class LoadBeanHelper {
             Container.singletonObjects.remove(beanDefintion.getBeanName());
             return obj;
         }
+
+
         return null;
     }
 
     /**
      * 获取属性，填充属性
      */
-    private static void populate(String BeanName)
+    private static Object populate(String BeanName)
     {
         try {
-                Class<?> bean=Container.singletonFactory.get(BeanName).getBeanDefintion().getClazz();
+                Class<?> bean=null;
+                if(Container.singletonFactory.containsKey(BeanName))
+                    bean=Container.singletonFactory.get(BeanName).getInstance().getClass();
+                else if(Container.earlySingletonObjects.containsKey(BeanName))
+                    bean=Container.earlySingletonObjects.get(BeanName).getClass();
                 for (Field delclaredField : bean.getDeclaredFields())
                 {
                     if(!delclaredField.isAnnotationPresent(Autowired.class))
@@ -307,21 +326,45 @@ public class LoadBeanHelper {
                     String a=delclaredField.getAnnotation(Autowired.class).value();
                     if(!delclaredField.getAnnotation(Autowired.class).value().equals(""))
                         benName=delclaredField.getAnnotation(Autowired.class).value();
+                    if(Container.singletonFactory.containsKey(benName))
+                    {
+                        Container.earlySingletonObjects.put(benName,Container.singletonFactory.get(benName).getTarget());
+                        Container.singletonFactory.remove(benName);
+                    }
                     Object fBean = getBean(benName);
                     delclaredField.setAccessible(true);
-                    delclaredField.set(Container.singletonFactory.get(BeanName).getInstance(), fBean);
+                    Object aa=Container.singletonFactory.get(BeanName);
+                    if(Container.singletonFactory.containsKey(BeanName)) {
+                        delclaredField.set(Container.singletonFactory.get(BeanName).getInstance(), fBean);
+
+                    }
+                    else if(Container.earlySingletonObjects.containsKey(BeanName))
+                        delclaredField.set(Container.earlySingletonObjects.get(BeanName),fBean);
+                }
+                if(Container.singletonFactory.containsKey(BeanName)) {
+                    Object res=Container.singletonFactory.get(BeanName).getTarget();
+
+                    return res;
+                }
+                else if(Container.earlySingletonObjects.containsKey(BeanName))
+                {
+                    Object res=Container.earlySingletonObjects.get(BeanName);
+
+                    return  res;
                 }
 
-        } catch (IllegalAccessException e) {
+
+        } catch (Exception e) {
             e.printStackTrace();
         }
+        return null;
     }
 
 
 
     public static Object getBean(String BeanName)
     {//没有判断是不是单例，后期改进
-        if(beanDefintionHashMap.get(BeanName).getScope().equals(ScopeEnum.SingleTon))
+        if(beanDefintionHashMap.get(BeanName).getScope().equals("SingleTon"))
         {
             if (Container.singletonObjects.containsKey(BeanName))
                 return Container.singletonObjects.get(BeanName);
@@ -357,7 +400,7 @@ public class LoadBeanHelper {
         {
             String fileName= file.getAbsolutePath();
             //+8是为了跳过classes这个字符串
-            String className=fileName.substring(fileName.indexOf("classes")+8,fileName.indexOf(".class")).replace("\\",".");
+            String className=fileName.substring(fileName.indexOf("classes")+8,fileName.indexOf(".class")).replace(splitOP,".");
             try {
                 clazz=classLoader.loadClass(className);
                 classesHashSet.add(clazz);

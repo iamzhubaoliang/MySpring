@@ -9,17 +9,17 @@ import com.baoliang.spring.Annotation.*;
 @Component
 @Aspect
 public class MethodAspect {
-    @PointCut("com.Mytest.service.MethodAspect.methdFunction()")
+    @PointCut("com.Mytest.service.impl.MethodAspectImpl.methdFunction()")
     public void point()
     {}
     @Before
     public void beforeFunction()
     {
-        System.out.println("加在类级别的前置通知执行");
+        System.out.println("方法前置");
     }
     @After
     public void afterFunction()
     {
-        System.out.println("加在类级别的后置通知执行");
+        System.out.println("方法后置");
     }
 }

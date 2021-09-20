@@ -17,5 +17,9 @@
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_STRING" value="-parameters" />
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="Spring_framework" options="" />
+      <module name="TestProject" options="" />
+    </option>
   </component>
 </project>
