@@ -30,4 +30,5 @@ SpringMVC部分借鉴了博主  [椰子Tyshawn](https://tyshawnlee.blog.csdn.net
 # 博文
 
 1. [（一）手写Spring项目之IOC](https://blog.csdn.net/oxfff/article/details/120281892)
-2. [（二）手写Spring项目之AOP](https://editor.csdn.net/md/?articleId=120395237)
+2. [（二）手写Spring项目之AOP](https://blog.csdn.net/oxfff/article/details/120395237)
+
