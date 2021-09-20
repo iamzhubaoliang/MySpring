@@ -6,13 +6,17 @@ import com.Mytest.service.impl.ClassInterfaceImpl;
 import com.Mytest.service.impl.MethodAspectImpl;
 import com.baoliang.spring.MySpringApplication;
 
+import java.util.Properties;
+
 /**
  * 年: 2021 月: 09日: 10小时: 10分钟: 39
  * 用户名: liangliang
  **/
 public class test {
     public static void main(String[] args) {
-//        MySpringApplication app = new MySpringApplication(config.class);
+
+
+        MySpringApplication app = new MySpringApplication(config.class);
 //        ClassAspectTestInterface classInterface = app.getBean(ClassInterfaceImpl.class);
 //        classInterface.FunctionRun();
 //        ((ClassInterfaceImpl) classInterface).Propertyfuntion();
@@ -22,7 +26,7 @@ public class test {
 //
 //        MethodAspectTestInterface aa= (MethodAspectTestInterface) app.getBean("Namefor");
 //        aa.methdFunction();
-        MySpringApplication app = new MySpringApplication();
+//        MySpringApplication app = new MySpringApplication();
 
     }
 
