@@ -13,7 +13,7 @@ import com.baoliang.spring.Interface.BeanNameAware;
 public class ClassInterfaceImpl implements ClassAspectTestInterface {
     //项目利用的是JDK动态代理，所以必须要有接口，否则会出现cast Exception
     @Autowired
-    PropertyInsert propertyInsert;
+    propertyInterface propertyInsert;
 
 
 

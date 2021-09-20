@@ -199,7 +199,7 @@ public class LoadBeanHelper {
 
                 }
             }
-        System.out.println("s");
+//        System.out.println("s");
 
     }
     private static Object CreateBean(BeanDefintion beanDefintion,Boolean sinleton) {
@@ -336,7 +336,7 @@ public class LoadBeanHelper {
                     Object aa=Container.singletonFactory.get(BeanName);
                     if(Container.singletonFactory.containsKey(BeanName)) {
                         delclaredField.set(Container.singletonFactory.get(BeanName).getInstance(), fBean);
-                        System.out.println("ssssssssss");
+
                     }
                     else if(Container.earlySingletonObjects.containsKey(BeanName))
                         delclaredField.set(Container.earlySingletonObjects.get(BeanName),fBean);
